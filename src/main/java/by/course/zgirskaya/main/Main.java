@@ -2,7 +2,7 @@ package by.course.zgirskaya.main;
 
 import by.course.zgirskaya.entity.Port;
 import by.course.zgirskaya.entity.Ship;
-import by.course.zgirskaya.reader.impl.ShipDataReaderImpl;
+import by.course.zgirskaya.reader.impl.ConfigReaderImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +19,7 @@ public class Main {
 
   public static void main(String[] args) {
     try {
-      ShipDataReaderImpl configReader = new ShipDataReaderImpl();
+      ConfigReaderImpl configReader = new ConfigReaderImpl();
       configReader.loadConfigurationFromFile(CONFIG_FILE);
 
       // Port initialization
@@ -67,7 +67,7 @@ public class Main {
     }
   }
 
-  private static List<Ship> createShips(ShipDataReaderImpl configReader, int numberOfShips) {
+  private static List<Ship> createShips(ConfigReaderImpl configReader, int numberOfShips) {
     List<Ship> ships = new ArrayList<>();
     Random random = new Random();
 

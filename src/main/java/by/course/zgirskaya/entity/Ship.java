@@ -55,8 +55,6 @@ public class Ship implements Callable<String> {
   public ShipState getState() { return state;}
 
   public int getId() { return id; }
-  public int getCapacity() { return capacity; }
-  public int getCurrentContainers() { return currentContainers.get(); }
   public int getContainersToLoad() { return containersToLoad.get(); }
   public int getContainersToUnload() { return containersToUnload.get(); }
 
@@ -78,9 +76,5 @@ public class Ship implements Callable<String> {
       return true;
     }
     return false;
-  }
-
-  public boolean isProcessingComplete() {
-    return containersToLoad.get() == 0 && containersToUnload.get() == 0;
   }
 }

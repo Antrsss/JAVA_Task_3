@@ -1,6 +1,6 @@
 package by.course.zgirskaya.reader.impl;
 
-import by.course.zgirskaya.reader.ShipDataReader;
+import by.course.zgirskaya.reader.ConfigReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,7 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class ShipDataReaderImpl implements ShipDataReader {
+public class ConfigReaderImpl implements ConfigReader {
   private static final Logger logger = LogManager.getLogger();
 
   private int portCapacity;

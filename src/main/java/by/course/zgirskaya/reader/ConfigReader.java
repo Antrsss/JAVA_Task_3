@@ -1,6 +1,6 @@
 package by.course.zgirskaya.reader;
 
-public interface ShipDataReader {
+public interface ConfigReader {
   String DELIMITER = "=";
   void loadConfigurationFromFile(String filename);
 }
