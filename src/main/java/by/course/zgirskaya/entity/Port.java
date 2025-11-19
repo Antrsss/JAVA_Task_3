@@ -33,18 +33,15 @@ public class Port {
       logger.info("Ship {} assigned to dock", ship.getId());
 
       ship.setState(new UnloadingState());
-      while (ship.getContainersToUnload() > 0 && !Thread.currentThread().isInterrupted()) {
-        ship.getState().doTask(ship);
-      }
+      ship.executeUntilComplete();
 
       ship.setState(new LoadingState());
-      while (ship.getContainersToLoad() > 0 && !Thread.currentThread().isInterrupted()) {
-        ship.getState().doTask(ship);
-      }
+      ship.executeUntilComplete();
 
       ship.setState(new CompletedState());
-      logger.info("Ship {} processing completed at dock", ship.getId());
+      ship.executeUntilComplete();
 
+      logger.info("Ship {} processing completed at dock", ship.getId());
       return String.format("Ship %d processed successfully", ship.getId());
     } finally {
       dockSemaphore.release();

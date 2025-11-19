@@ -5,7 +5,7 @@ import by.course.zgirskaya.entity.Ship;
 import java.util.concurrent.TimeUnit;
 
 public interface ShipState {
-  void doTask(Ship ship);
+  void processUntilComplete(Ship ship);
 
   default void delayTask(int millisecondsCount) {
     try {

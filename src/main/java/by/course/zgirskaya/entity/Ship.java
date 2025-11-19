@@ -7,24 +7,23 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Ship implements Callable<String> {
   private static final Logger logger = LogManager.getLogger();
 
   private final int id;
   private final int capacity;
-  private final AtomicInteger currentContainers;
-  private final AtomicInteger containersToLoad;
-  private final AtomicInteger containersToUnload;
+  private int currentContainers;
+  private int containersToLoad;
+  private int containersToUnload;
   private ShipState state;
 
   public Ship(int capacity, int toLoad, int toUnload) {
     this.id = CustomIdGenerator.nextId();
     this.capacity = capacity;
-    this.containersToLoad = new AtomicInteger(toLoad);
-    this.containersToUnload = new AtomicInteger(toUnload);
-    this.currentContainers = new AtomicInteger(toUnload);
+    this.containersToLoad = toLoad;
+    this.containersToUnload = toUnload;
+    this.currentContainers = toUnload;
 
     setState(new WaitingState());
 
@@ -35,7 +34,7 @@ public class Ship implements Callable<String> {
   @Override
   public String call() {
     logger.info("Ship {} arrived at port (load: {}, unload: {})",
-            id, containersToLoad.get(), containersToUnload.get());
+            id, containersToLoad, containersToUnload);
 
     try {
       Port port = Port.getInstance();
@@ -47,22 +46,11 @@ public class Ship implements Callable<String> {
     }
   }
 
-  public void setState(ShipState state) {
-    this.state = state;
-    this.state.doTask(this);
-  }
-
-  public ShipState getState() { return state;}
-
-  public int getId() { return id; }
-  public int getContainersToLoad() { return containersToLoad.get(); }
-  public int getContainersToUnload() { return containersToUnload.get(); }
-
   public boolean unloadContainer() {
     Port port = Port.getInstance();
-    if (containersToUnload.get() > 0 && port.addContainer()) {
-      currentContainers.decrementAndGet();
-      containersToUnload.decrementAndGet();
+    if (containersToUnload > 0 && port.addContainer()) {
+      currentContainers--;
+      containersToUnload--;
       return true;
     }
     return false;
@@ -70,11 +58,21 @@ public class Ship implements Callable<String> {
 
   public boolean loadContainer() {
     Port port = Port.getInstance();
-    if (containersToLoad.get() > 0 && currentContainers.get() < capacity && port.removeContainer()) {
-      currentContainers.incrementAndGet();
-      containersToLoad.decrementAndGet();
+    if (containersToLoad > 0 && currentContainers < capacity && port.removeContainer()) {
+      currentContainers++;
+      containersToLoad--;
       return true;
     }
     return false;
   }
+
+  public void executeUntilComplete() {
+    this.state.processUntilComplete(this);
+  }
+
+  public int getId() { return id; }
+  public int getContainersToLoad() { return containersToLoad; }
+  public int getContainersToUnload() { return containersToUnload; }
+
+  public void setState(ShipState state) { this.state = state; }
 }

@@ -7,10 +7,10 @@ import org.apache.logging.log4j.Logger;
 
 public class CompletedState implements ShipState {
   private static final Logger logger = LogManager.getLogger();
-  private static final int COMPLETING_TIMEOUT = 5;
+  private static final int COMPLETING_TIMEOUT = 10;
 
   @Override
-  public void doTask(Ship ship) {
+  public void processUntilComplete(Ship ship) {
     logger.info("Ship {} completed processing and leaving port", ship.getId());
     delayTask(COMPLETING_TIMEOUT);
   }

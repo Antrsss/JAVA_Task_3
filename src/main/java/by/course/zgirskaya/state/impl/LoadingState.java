@@ -7,14 +7,20 @@ import org.apache.logging.log4j.Logger;
 
 public class LoadingState implements ShipState {
   private static final Logger logger = LogManager.getLogger();
-  private static final int LOADING_TIMEOUT = 20;
+  private static final int LOADING_TIMEOUT = 30;
 
   @Override
-  public void doTask(Ship ship) {
-    if (ship.loadContainer()) {
-      logger.debug("Ship {} loaded container (remaining: {})",
-              ship.getId(), ship.getContainersToLoad());
+  public void processUntilComplete(Ship ship) {
+    logger.info("Ship {} started loading", ship.getId());
+
+    while (ship.getContainersToLoad() > 0 && !Thread.currentThread().isInterrupted()) {
+      if (ship.loadContainer()) {
+        logger.debug("Ship {} loaded container (remaining: {})",
+                ship.getId(), ship.getContainersToLoad());
+      }
+      delayTask(LOADING_TIMEOUT);
     }
-    delayTask(LOADING_TIMEOUT);
+
+    logger.info("Ship {} finished loading", ship.getId());
   }
 }

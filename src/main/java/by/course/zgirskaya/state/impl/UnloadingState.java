@@ -7,14 +7,20 @@ import org.apache.logging.log4j.Logger;
 
 public class UnloadingState implements ShipState {
   private static final Logger logger = LogManager.getLogger();
-  private static final int UNLOADING_TIMEOUT = 15;
+  private static final int UNLOADING_TIMEOUT = 20;
 
   @Override
-  public void doTask(Ship ship) {
-    if (ship.unloadContainer()) {
-      logger.debug("Ship {} unloaded container (remaining: {})",
-              ship.getId(), ship.getContainersToUnload());
+  public void processUntilComplete(Ship ship) {
+    logger.info("Ship {} started unloading", ship.getId());
+
+    while (ship.getContainersToUnload() > 0 && !Thread.currentThread().isInterrupted()) {
+      if (ship.unloadContainer()) {
+        logger.debug("Ship {} unloaded container (remaining: {})",
+                ship.getId(), ship.getContainersToUnload());
+      }
+      delayTask(UNLOADING_TIMEOUT);
     }
-    delayTask(UNLOADING_TIMEOUT);
+
+    logger.info("Ship {} finished unloading", ship.getId());
   }
 }
