@@ -1,0 +1,7 @@
+port_capacity=1000
+number_of_docks=3
+number_of_ships=10
+min_ship_capacity=50
+max_ship_capacity=200
+min_containers=10
+max_containers=100
