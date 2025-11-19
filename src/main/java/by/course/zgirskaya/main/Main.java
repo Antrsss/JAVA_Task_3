@@ -18,7 +18,6 @@ public class Main {
   private static final String CONFIG_FILE = "resources\\config.txt";
 
   public static void main(String[] args) {
-    logger.info("=== PROGRAM STARTED (Logger) ===");
     try {
       ShipDataReaderImpl configReader = new ShipDataReaderImpl();
       configReader.loadConfigurationFromFile(CONFIG_FILE);
